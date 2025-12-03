@@ -1,9 +1,16 @@
 import csv
-from pprint import pprint
 
-with open("phonebook_raw.csv", encoding="utf-8") as f:
-    rows = csv.reader(f, delimiter=",")
-    contacts_list = list(rows)
+try:
+    with open("phonebook_raw.csv", encoding="utf-8") as f:
+        rows = csv.reader(f, delimiter=",")
+        contacts_list = list(rows)
+except FileNotFoundError as e:
+    print(f"Ошибка: файл 'phonebook_raw.csv' не найден. {e}")
+    exit(1)
+except Exception as e:
+    print(f"Ошибка при чтении файла: {e}")
+    exit(1)
+
 
 header = contacts_list[0]
 data = contacts_list[1:]
@@ -11,6 +18,9 @@ data = contacts_list[1:]
 contacts_dict = {}
 
 for row in data:
+    # print(len(row))
+    while len(row) < 7:
+        row.append('')  # Дополняем до 7 на всякий случай
     # print(row[:3])
     full_name = " ".join(row[:3]).strip().split()
     lastname = full_name[0] if len(full_name) > 0 else ""
@@ -34,11 +44,14 @@ for row in data:
 # Финальный список
 final_contacts_list = [header[:7]]
 final_contacts_list.extend(contacts_dict.values())
-final_contacts_list.sort(key=lambda x: x[0]) # Сортировка по алфавиту
+final_contacts_list.sort(key=lambda x: x[0])  # Сортировка по алфавиту
 
 # pprint(final_contacts_list)
 
-
-with open("phonebook.csv", "w", encoding="utf-8", newline='') as f:
-  datawriter = csv.writer(f, delimiter=',')
-  datawriter.writerows(final_contacts_list)
+try:
+    with open("phonebook.csv", "w", encoding="utf-8", newline='') as f:
+        datawriter = csv.writer(f, delimiter=',')
+        datawriter.writerows(final_contacts_list)
+except Exception as e:
+    print(f"Ошибка при записи файла: {e}")
+    exit(1)
