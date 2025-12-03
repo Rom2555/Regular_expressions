@@ -1,18 +1,38 @@
-from pprint import pprint
-# читаем адресную книгу в формате CSV в список contacts_list
 import csv
+from pprint import pprint
+
 with open("phonebook_raw.csv", encoding="utf-8") as f:
-  rows = csv.reader(f, delimiter=",")
-  contacts_list = list(rows)
-#pprint(contacts_list)
+    rows = csv.reader(f, delimiter=",")
+    contacts_list = list(rows)
 
-# TODO 1: выполните пункты 1-3 ДЗ
+header = contacts_list[0]
+data = contacts_list[1:]
 
+contacts_dict = {}
 
+for row in data:
+    # print(row[:3])
+    full_name = " ".join(row[:3]).strip().split()
+    lastname = full_name[0] if len(full_name) > 0 else ""
+    firstname = full_name[1] if len(full_name) > 1 else ""
+    surname = full_name[2] if len(full_name) > 2 else ""
+    organization = row[3] if len(row) > 3 else ""
+    position = row[4] if len(row) > 4 else ""
+    phone = row[5] if len(row) > 5 else ""
+    email = row[6] if len(row) > 6 else ""
 
-# TODO 2: сохраните получившиеся данные в другой файл
-# код для записи файла в формате CSV
-with open("phonebook.csv", "w", encoding="utf-8") as f:
-  datawriter = csv.writer(f, delimiter=',')
-  # Вместо contacts_list подставьте свой список
-  datawriter.writerows(contacts_list)
+    key = (lastname, firstname)
+
+    if key not in contacts_dict:
+        contacts_dict[key] = [lastname, firstname, surname, organization, position, phone, email]
+    else:
+        existing = contacts_dict[key]  # берём сохранённую запись
+        for i, value in enumerate([surname, organization, position, phone, email]):
+            if value and not existing[i + 2]:
+                existing[i + 2] = value
+
+# Финальный список
+final_contacts_list = [header[:7]]
+final_contacts_list.extend(contacts_dict.values())
+
+pprint(final_contacts_list)
