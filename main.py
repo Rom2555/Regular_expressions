@@ -38,6 +38,7 @@ final_contacts_list.sort(key=lambda x: x[0]) # Сортировка по алф�
 
 # pprint(final_contacts_list)
 
+
 with open("phonebook.csv", "w", encoding="utf-8", newline='') as f:
   datawriter = csv.writer(f, delimiter=',')
   datawriter.writerows(final_contacts_list)
