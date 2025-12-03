@@ -34,5 +34,10 @@ for row in data:
 # Финальный список
 final_contacts_list = [header[:7]]
 final_contacts_list.extend(contacts_dict.values())
+final_contacts_list.sort(key=lambda x: x[0]) # Сортировка по алфавиту
 
-pprint(final_contacts_list)
+# pprint(final_contacts_list)
+
+with open("phonebook.csv", "w", encoding="utf-8", newline='') as f:
+  datawriter = csv.writer(f, delimiter=',')
+  datawriter.writerows(final_contacts_list)
