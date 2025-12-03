@@ -12,6 +12,10 @@ except Exception as e:
     exit(1)
 
 
+def format_phone(phone):
+    pass
+
+
 header = contacts_list[0]
 data = contacts_list[1:]
 
@@ -28,7 +32,7 @@ for row in data:
     surname = full_name[2] if len(full_name) > 2 else ""
     organization = row[3] if len(row) > 3 else ""
     position = row[4] if len(row) > 4 else ""
-    phone = row[5] if len(row) > 5 else ""
+    phone = format_phone(row[5]) if len(row) > 5 else ""
     email = row[6] if len(row) > 6 else ""
 
     key = (lastname, firstname)
