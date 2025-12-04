@@ -62,7 +62,9 @@ for row in data:
         ]
     else:
         existing = contacts_dict[key]  # берём сохранённую запись
-        for i, value in enumerate([surname, organization, position, phone_number, email]):
+        for i, value in enumerate(
+            [surname, organization, position, phone_number, email]
+        ):
             if value and not existing[i + 2]:
                 existing[i + 2] = value
 
