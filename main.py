@@ -1,6 +1,7 @@
 import csv
 import re
 
+
 INPUT_FILE_NAME = "phonebook_raw.csv"
 OUTPUT_FILE_NAME = "phonebook.csv"
 
@@ -19,7 +20,7 @@ except Exception as e:
 
 def format_phone_number(phone_number):
     """
-    Форматирует телефонный номер в едином стандарте: +7(XXX)XXX-XX-XX доб.XXXX.
+    Форматирует телефонный номер в едином стандарте: +7(XXX)XXX-XX-XX [доб.XXXX].
 
     Поддерживает форматы:
         - 8(999)123-45-67
