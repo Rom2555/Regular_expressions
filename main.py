@@ -29,51 +29,46 @@ def format_phone_number(phone_number):
     return formatted.strip()
 
 
+def parse_contact_row(contact_row):
+    contact_row = (contact_row + [""] * 7)[:7]  # дополняем до 7
+
+    full_name = " ".join(contact_row[:3]).strip().split()
+    lastname = full_name[0] if len(full_name) > 0 else ""
+    firstname = full_name[1] if len(full_name) > 1 else ""
+    surname = full_name[2] if len(full_name) > 2 else ""
+
+    return (lastname, firstname), [
+        lastname,
+        firstname,
+        surname,
+        contact_row[3],  # organization
+        contact_row[4],  # position
+        format_phone_number(contact_row[5]),  # phone
+        contact_row[6],  # email
+    ]  # Возвращаем ключ(фамилия, имя) и отформатированный контакт
+
+
 header = contacts_list[0]
 data = contacts_list[1:]
 
 contacts_dict = {}
 
 for row in data:
-    # print(len(row))
-    while len(row) < 7:
-        row.append("")  # Дополняем до 7 на всякий случай
-    # print(row[:3])
-    full_name = " ".join(row[:3]).strip().split()
-    lastname = full_name[0] if len(full_name) > 0 else ""
-    firstname = full_name[1] if len(full_name) > 1 else ""
-    surname = full_name[2] if len(full_name) > 2 else ""
-    organization = row[3] if len(row) > 3 else ""
-    position = row[4] if len(row) > 4 else ""
-    phone_number = format_phone_number(row[5]) if len(row) > 5 else ""
-    email = row[6] if len(row) > 6 else ""
-
-    key = (lastname, firstname)
+    key, contact_data = parse_contact_row(row)
 
     if key not in contacts_dict:
-        contacts_dict[key] = [
-            lastname,
-            firstname,
-            surname,
-            organization,
-            position,
-            phone_number,
-            email,
-        ]
+        contacts_dict[key] = contact_data
     else:
-        existing = contacts_dict[key]  # берём сохранённую запись
-        for i, value in enumerate(
-            [surname, organization, position, phone_number, email]
-        ):
-            if value and not existing[i + 2]:
-                existing[i + 2] = value
+        existing_contact = contacts_dict[key]
+        # Обновляем surname, org, pos, phone, email (поля 3-7)
+        for i in range(2, 7):
+            if contact_data[i] and not existing_contact[i]:
+                existing_contact[i] = contact_data[i]
 
 # Финальный список
 final_contacts_list = [header[:7]]
 final_contacts_list.extend(contacts_dict.values())
 final_contacts_list.sort(key=lambda x: x[0])  # Сортировка по алфавиту
-
-# pprint(final_contacts_list)
 
 try:
     with open(OUTPUT_FILE_NAME, "w", encoding="utf-8", newline="") as f:
